@@ -1,9 +1,9 @@
 public class Room {
     private int roomId;
     private int roomBed;
-    private int roomPrice;
+    private double roomPrice;
     private boolean isReserved;
-    public Room(int roomId,int roomBed,int roomPrice,boolean isReserved){
+    public Room(int roomId,int roomBed,double roomPrice,boolean isReserved){
         this.roomBed=roomBed;
         this.roomId=roomId;
         this.roomPrice=roomPrice;
@@ -15,7 +15,7 @@ public class Room {
     public int getRoomBed(){
         return roomBed;
     }
-    public int getRoomPrice(){
+    public double getRoomPrice(){
         return roomPrice;
     }
     public boolean getisReserved(){

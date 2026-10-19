@@ -16,11 +16,13 @@ public class BookingManager {
         return true;
     }
     public void createBooking(User user, Room room, LocalDate checkInDate,LocalDate checkOutDate,
-                              double totalPrice,double depositAmount,int generatedBookingId){
+                              double totalPrice,double depositAmount){
         if(isRoomAvailable(room.getRoomId())){
             if (user.withdraw(depositAmount)){
-            Booking newBooking=new Booking(generatedBookingId,room,user,checkInDate,
+            Booking newBooking=new Booking(room,user,checkInDate,
                     checkOutDate,totalPrice,depositAmount,LocalDate.now());
+            BookingDB bookingDB=new BookingDB();
+            bookingDB.saveBooking(newBooking);
             bookings.add(newBooking);
             user.addReservation(newBooking);
         }}

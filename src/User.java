@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private int userId;
     private String name;
     private String lastName;
     private String job;
@@ -21,6 +22,7 @@ public class User {
         this.balance = 0.0;
         this.reservations = new ArrayList<>();
     }
+    public int getUserId(){return this.userId;}
 
     public String getName() {
         return name;
@@ -48,6 +50,10 @@ public class User {
 
     public double getBalance() {
         return balance;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public List<Booking> getReservations() {

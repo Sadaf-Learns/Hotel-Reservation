@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Booking {
@@ -17,8 +18,7 @@ public class Booking {
 
     private PaymentStatus paymentStatus;
 
-    public Booking(int bookingId, Room room, User user, LocalDate checkInDate, LocalDate checkOutDate, double totalPrice, double depositAmount, LocalDate bookingDate) {
-        this.bookingId = bookingId;
+    public Booking(Room room, User user, LocalDate checkInDate, LocalDate checkOutDate, double totalPrice, double depositAmount, LocalDate bookingDate) {
         this.room = room;
         this.user = user;
         this.checkInDate = checkInDate;
@@ -61,6 +61,7 @@ public class Booking {
     public User getUser() {
         return user;
     }
+    public PaymentStatus getPaymentStatus(){return paymentStatus;}
 
     public double getRemainingAmount() {
         return remainingAmount;
@@ -69,13 +70,18 @@ public class Booking {
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-    public  boolean payRemaining(User user){
+    public  boolean payRemaining(User user) throws SQLException {
         if(user.withdraw(remainingAmount)){
             remainingAmount=0;
             paymentStatus=PaymentStatus.PAID;
+            BookingDB bookingDB=new BookingDB();
+            bookingDB.updatePaymentStatus(this);
             return true;
         }
         return false;
+    }
+    public void setBookingId(int bookingId){
+        this.bookingId=bookingId;
     }
 }
 
