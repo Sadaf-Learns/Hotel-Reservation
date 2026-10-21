@@ -1,4 +1,7 @@
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookingDB {
     public void saveBooking(Booking booking)
@@ -38,6 +41,42 @@ public class BookingDB {
             statement.setInt(3,booking.getBookingId());
             statement.executeUpdate();
         }
+
+    }
+    public List<Booking> getAllBookings()throws SQLException{
+        String sql="SELECT * FROM bookings";
+        List<Booking> bookings=new ArrayList<>();
+        try(Connection connection=MyJDBC.getConnection();
+            PreparedStatement statement=connection.prepareStatement(sql);
+            ResultSet resultSet=statement.executeQuery()){
+            while (resultSet.next()){ //read reservation details
+                int bookingId=resultSet.getInt("booking_id");
+                double totalPrice=resultSet.getDouble("total_price");
+                int userId=resultSet.getInt("user_id");
+                int roomId=resultSet.getInt("room_id");
+                LocalDate checkInDate = resultSet.getDate("check_in_date").toLocalDate();
+                LocalDate checkOutDate = resultSet.getDate("check_out_date").toLocalDate();
+                double depositAmount = resultSet.getDouble("deposit_amount");
+                double remainingAmount = resultSet.getDouble("remaining_amount");
+                String paymentStatus = resultSet.getString("payment_status");
+                User user = new UserDB().getUserById(userId);
+                Room room = new RoomDB().getRoomById(roomId);
+                Booking booking = new Booking(
+                        room, user, checkInDate, checkOutDate,
+                        totalPrice, depositAmount, LocalDate.now()
+                );
+
+                booking.setBookingId(bookingId);
+                booking.setRemainingAmount(remainingAmount);
+                booking.setPaymentStatus(Booking.PaymentStatus.valueOf(paymentStatus));
+
+                bookings.add(booking);
+
+
+
+            }
+        }
+        return bookings;
 
     }
 }

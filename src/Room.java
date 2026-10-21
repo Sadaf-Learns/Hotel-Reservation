@@ -7,7 +7,7 @@ public class Room {
         this.roomBed=roomBed;
         this.roomId=roomId;
         this.roomPrice=roomPrice;
-        this.isReserved=false;
+        this.isReserved=isReserved;
     }
     public int getRoomId(){
         return roomId;

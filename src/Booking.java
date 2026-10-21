@@ -66,6 +66,9 @@ public class Booking {
     public double getRemainingAmount() {
         return remainingAmount;
     }
+    public void setRemainingAmount(double remainingAmount){
+        this.remainingAmount=remainingAmount;
+    }
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;

@@ -31,4 +31,28 @@ public class UserDB {
 
 
     }
+    public User getUserById(int userId) throws SQLException{
+        String sql="SELECT * FROM users WHERE user_id=?";
+        try (Connection connection=MyJDBC.getConnection();
+        PreparedStatement statement= connection.prepareStatement(sql)){
+            statement.setInt(1,userId);
+            ResultSet resultSet=statement.executeQuery();
+            if(resultSet.next()){
+                String name= resultSet.getString("name");
+                String lastName = resultSet.getString("last_name");
+                String job = resultSet.getString("job");
+                String education = resultSet.getString("education");
+                String phoneNumber = resultSet.getString("phone_number");
+                String nationalId = resultSet.getString("national_id");
+                User user=new User(name, lastName, job, education, phoneNumber, nationalId);//database variables
+                user.setUserId(resultSet.getInt("user_id"));
+                return user;
+
+            }
+            else {
+                return null;
+            }
+
+        }
+    }
 }

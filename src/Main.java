@@ -28,7 +28,7 @@ public class Main {
         UserDB userDB=new UserDB();
         Room selectedRoom=null;
         userDB.saveUser(user);
-        System.out.println(user.getUserId());
+        System.out.println("UserID: "+user.getUserId());
         RoomDB roomDB=new RoomDB();
         List<Room> rooms=roomDB.getAllRooms();
         for (Room room:rooms){
@@ -77,6 +77,9 @@ public class Main {
         Booking booking = user.getReservations().getFirst();
         System.out.println(booking.getRemainingAmount());
         booking.payRemaining(user);
+        roomDB.updateRoomStatus(selectedRoom.getRoomId(),true);
+        BookingDB bookingDB=new BookingDB();
+        System.out.println("number of bookings: "+bookingDB.getAllBookings().size());
 
 
     }

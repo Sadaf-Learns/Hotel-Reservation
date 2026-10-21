@@ -35,4 +35,35 @@ public class RoomDB {
         }
         return rooms;
     }
+    public Room getRoomById(int roomId) throws SQLException{
+        String sql="SELECT * FROM rooms WHERE room_id=?";
+        try(Connection connection=MyJDBC.getConnection();
+        PreparedStatement statement=connection.prepareStatement(sql)){
+            statement.setInt(1,roomId);
+            ResultSet resultSet=statement.executeQuery();
+            if(resultSet.next()){
+                int roomID = resultSet.getInt("room_id");
+                int roomBed = resultSet.getInt("bed_count");
+                double roomPrice = resultSet.getDouble("room_price");
+                boolean isReserved = resultSet.getBoolean("is_reserved");
+                Room room=new Room(roomID, roomBed, roomPrice, isReserved);
+                return room;
+            }
+            else{
+                return null;
+            }
+        }
+
+    }
+    public void updateRoomStatus(int roomID,Boolean isReserved) throws SQLException{
+        String sql = "UPDATE rooms SET is_reserved = ? WHERE room_id = ?";
+
+        try (Connection connection = MyJDBC.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setBoolean(1, isReserved);
+            statement.setInt(2, roomID);
+            statement.executeUpdate();
+        }
+    }
 }

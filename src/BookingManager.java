@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -16,13 +17,15 @@ public class BookingManager {
         return true;
     }
     public void createBooking(User user, Room room, LocalDate checkInDate,LocalDate checkOutDate,
-                              double totalPrice,double depositAmount){
+                              double totalPrice,double depositAmount) throws SQLException {
         if(isRoomAvailable(room.getRoomId())){
             if (user.withdraw(depositAmount)){
             Booking newBooking=new Booking(room,user,checkInDate,
                     checkOutDate,totalPrice,depositAmount,LocalDate.now());
             BookingDB bookingDB=new BookingDB();
             bookingDB.saveBooking(newBooking);
+            RoomDB roomDB=new RoomDB();
+            roomDB.updateRoomStatus(room.getRoomId(),true);
             bookings.add(newBooking);
             user.addReservation(newBooking);
         }}
