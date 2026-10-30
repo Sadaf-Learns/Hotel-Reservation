@@ -47,6 +47,7 @@ public class Main {
         }
         if(selectedRoom==null){
             System.out.println("Invalid Room ID.");
+            return;
         }
         if(selectedRoom.getisReserved()){
             System.out.println("Room is already reserved.");
@@ -65,19 +66,26 @@ public class Main {
         System.out.println("Enter  wallet top-up amount: ");
         double amount=input.nextDouble();
         user.deposit(amount);
-        bookingManager.createBooking(
-                user,
-                selectedRoom,
-                checkIn,
-                checkout,
-                totalPrice,
-                depositAmount
-        );
-        System.out.println(user.getReservations().get(0).getTotalPrice());
-        Booking booking = user.getReservations().getFirst();
-        System.out.println(booking.getRemainingAmount());
-        booking.payRemaining(user);
-        roomDB.updateRoomStatus(selectedRoom.getRoomId(),true);
+        boolean bookingCreated=bookingManager.createBooking(user, selectedRoom,
+                checkIn, checkout, totalPrice, depositAmount);
+        if(!checkout.isAfter(checkIn)){
+            System.out.println("Checkout date must be after checkin date.");
+            return;
+        }
+        if (checkIn.isBefore(LocalDate.now())) {
+            System.out.println("Check-in date cannot be in the past.");
+            return;
+        }
+        if(bookingCreated){
+            Booking booking=user.getReservations().getFirst();
+            System.out.println(booking.getTotalPrice());
+            System.out.println(booking.getRemainingAmount());
+            bookingManager.payRemaining(booking);
+        }
+        else {
+            System.out.println("Booking failed. Room unavailable or insufficient balance.");
+        }
+
         BookingDB bookingDB=new BookingDB();
         System.out.println("number of bookings: "+bookingDB.getAllBookings().size());
 

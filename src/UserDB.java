@@ -3,8 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDB {
-    public void saveUser(User user) {
+public class UserDB implements UserDAO {
+    public void saveUser(User user) throws SQLException {
         String sql = "INSERT INTO users (name, last_name," +
                 "job, education, phone_number, national_id) VALUES (?, ?, ?, ?, ?, ?)" +
                 "RETURNING user_Id";
@@ -23,9 +23,6 @@ public class UserDB {
             }
         }
 
-        catch (SQLException e){
-            System.out.println("Could not save user.");
-        }
 
 
 

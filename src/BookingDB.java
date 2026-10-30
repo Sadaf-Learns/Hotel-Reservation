@@ -3,8 +3,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingDB {
-    public void saveBooking(Booking booking)
+public class BookingDB implements BookingDAO {
+    public void saveBooking(Booking booking) throws SQLException
     {
         String sql = "INSERT INTO bookings (user_id, room_id, check_in_date," +
                 " check_out_date, total_price, deposit_amount," +
@@ -28,9 +28,8 @@ public class BookingDB {
                 booking.setBookingId(bookingId);
             }}
 
-    } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    }
+
     }
     public void updatePaymentStatus(Booking booking) throws SQLException {
         String sql="UPDATE bookings SET payment_status=?, remaining_amount=? WHERE booking_id=?";
@@ -43,9 +42,9 @@ public class BookingDB {
         }
 
     }
-    public List<Booking> getAllBookings()throws SQLException{
+    public List<BookingData> getAllBookings()throws SQLException{
         String sql="SELECT * FROM bookings";
-        List<Booking> bookings=new ArrayList<>();
+        List<BookingData> bookings=new ArrayList<>();
         try(Connection connection=MyJDBC.getConnection();
             PreparedStatement statement=connection.prepareStatement(sql);
             ResultSet resultSet=statement.executeQuery()){
@@ -59,24 +58,14 @@ public class BookingDB {
                 double depositAmount = resultSet.getDouble("deposit_amount");
                 double remainingAmount = resultSet.getDouble("remaining_amount");
                 String paymentStatus = resultSet.getString("payment_status");
-                User user = new UserDB().getUserById(userId);
-                Room room = new RoomDB().getRoomById(roomId);
-                Booking booking = new Booking(
-                        room, user, checkInDate, checkOutDate,
-                        totalPrice, depositAmount, LocalDate.now()
-                );
-
-                booking.setBookingId(bookingId);
-                booking.setRemainingAmount(remainingAmount);
-                booking.setPaymentStatus(Booking.PaymentStatus.valueOf(paymentStatus));
-
-                bookings.add(booking);
-
-
+                BookingData data=new BookingData(bookingId,userId,roomId,checkInDate,
+                        checkOutDate, totalPrice,depositAmount,
+                 remainingAmount,paymentStatus);
+                bookings.add(data);
 
             }
         }
         return bookings;
 
     }
-}
+    }

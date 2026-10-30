@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomDB {
+public class RoomDB implements RoomDAO{
     public void saveRoom(Room room)throws SQLException {
         String sql="INSERT INTO rooms(bed_count,room_price,is_reserved)" +
                 "VALUES(?,?,?)";
@@ -55,7 +55,7 @@ public class RoomDB {
         }
 
     }
-    public void updateRoomStatus(int roomID,Boolean isReserved) throws SQLException{
+    public void updateRoomStatus(int roomID,boolean isReserved) throws SQLException{
         String sql = "UPDATE rooms SET is_reserved = ? WHERE room_id = ?";
 
         try (Connection connection = MyJDBC.getConnection();

@@ -73,16 +73,7 @@ public class Booking {
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-    public  boolean payRemaining(User user) throws SQLException {
-        if(user.withdraw(remainingAmount)){
-            remainingAmount=0;
-            paymentStatus=PaymentStatus.PAID;
-            BookingDB bookingDB=new BookingDB();
-            bookingDB.updatePaymentStatus(this);
-            return true;
-        }
-        return false;
-    }
+
     public void setBookingId(int bookingId){
         this.bookingId=bookingId;
     }
